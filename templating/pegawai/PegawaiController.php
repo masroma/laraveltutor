@@ -78,15 +78,15 @@ class PegawaiController extends Controller
      */
     public function create()
     {
-        $name_page = "tahunajaran";
-        $title = "Tahun Ajaran";
+        $name_page = "pegawai";
+        $title = "Pegawau";
         $data = array(
             'page' => $name_page,
             'title' => $title
 
         );
 
-        return view('akademik::tahunajaran.create')->with($data);
+        return view('pegawai.create')->with($data);
     }
 
     /**
@@ -99,11 +99,17 @@ class PegawaiController extends Controller
         DB::beginTransaction();
         try {
             $this->validate($request, [
-                'tahun_ajaran' => 'required'
+                'nama_pegawai' => 'required',
+                'gender' => 'required',
+                'usia' => 'required',
+                'alamat' => 'required'
             ]);
 
-            $save = new TahunAjaran();
-            $save->tahun_ajaran = $request->tahun_ajaran;
+            $save = new Pegawai();
+            $save->nama_lengkap = $request->nama_lengkap;
+            $save->usia = $request->usia;
+            $save->gender = $request->gender;
+            $save->alamat = $request->alamat;
             $save->save();
 
             DB::commit();
@@ -114,10 +120,10 @@ class PegawaiController extends Controller
 
         if ($save) {
             //redirect dengan pesan sukses
-            return redirect()->route('tahunajaran.index')->with(['success' => 'Data Berhasil Disimpan!']);
+            return redirect()->route('pegawai.index')->with(['success' => 'Data Berhasil Disimpan!']);
         } else {
             //redirect dengan pesan error
-            return redirect()->route('tahunajaran.index')->with(['error' => 'Data Gagal Disimpan!']);
+            return redirect()->route('pegawai.index')->with(['error' => 'Data Gagal Disimpan!']);
         }
     }
 
@@ -129,7 +135,7 @@ class PegawaiController extends Controller
      */
     public function show($id)
     {
-        return view('akademik::show');
+        return view('pegawai.show');
     }
 
     /**
@@ -139,15 +145,15 @@ class PegawaiController extends Controller
      */
     public function edit($id)
     {
-        $tahunajaran = TahunAjaran::findOrFail($id);
+        $pegawai = Pegawai::findOrFail($id);
         $name_page = "tahunajaran";
         $title = "Tahun Ajaran";
         $data = array(
             'page' => $name_page,
-            'tahunajaran' => $tahunajaran,
+            'pegawai' => $pegawai,
             'title' => $title
         );
-        return view('akademik::tahunajaran.edit')->with($data);
+        return view('pegawai.edit')->with($data);
     }
     /**
      * Update the specified resource in storage.
@@ -161,20 +167,24 @@ class PegawaiController extends Controller
         DB::beginTransaction();
         try {
             $this->validate($request, [
-                'tahun_ajaran' => 'required'
-
+                'nama_pegawai' => 'required',
+                'gender' => 'required',
+                'usia' => 'required',
+                'alamat' => 'required'
             ]);
 
-            $update = TahunAjaran::find($id);
-            $update->tahun_ajaran = $request->tahun_ajaran;
-            $update->save();
-
+            $save = Pegawai::find($id);
+            $save->nama_lengkap = $request->nama_lengkap;
+            $save->usia = $request->usia;
+            $save->gender = $request->gender;
+            $save->alamat = $request->alamat;
+            $save->save();
+          
             DB::commit();
         } catch (ModelNotFoundException $exception) {
             DB::rollback();
             return back()->withError($exception->getMessage())->withInput();
         }
-
 
             if ($update) {
                 //redirect dengan pesan sukses
@@ -194,7 +204,7 @@ class PegawaiController extends Controller
     {
         DB::beginTransaction();
         try {
-            $delete = TahunAjaran::find($id)->delete();
+            $delete = Pegawai::find($id)->delete();
                 DB::commit();
         } catch (ModelNotFoundException $exception) {
             DB::rollback();
